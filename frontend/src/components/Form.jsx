@@ -1,4 +1,8 @@
 function Form({ setTitulo, setImgSRC, setDescripcion, agregarPost }) {
+  const handleAgregarPost = () => {
+    agregarPost()
+  };
+
   return (
     <div className="form">
       <div className="mb-2">
@@ -24,7 +28,7 @@ function Form({ setTitulo, setImgSRC, setDescripcion, agregarPost }) {
         ></textarea>
       </div>
       <div className="d-flex">
-        <button onClick={agregarPost} className="btn btn-light m-auto">
+        <button onClick={handleAgregarPost} className="btn btn-light m-auto">
           Agregar
         </button>
       </div>

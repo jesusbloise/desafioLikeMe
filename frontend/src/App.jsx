@@ -12,23 +12,37 @@ function App() {
   const [posts, setPosts] = useState([]);
 
   const getPosts = async () => {
-    const { data: posts } = await axios.get(urlBaseServer + "/posts");
-    setPosts([...posts]);
-  };
+    try {
+        const { data: posts } = await axios.get(urlBaseServer + "/posts");
+        console.log("Posts obtenidos:", posts); 
+        setPosts(Array.isArray(posts) ? [...posts] : []);
+    } catch (error) {
+        console.error("Error al obtener posts:", error.message);
+    }
+};
+
 
   const agregarPost = async () => {
-    const post = { titulo, url: imgSrc, descripcion };
+    const post = { titulo, img: imgSrc, descripcion };
+
     await axios.post(urlBaseServer + "/posts", post);
-    getPosts();
+    setPosts([...posts, post]);
   };
 
-  // este método se utilizará en el siguiente desafío
   const like = async (id) => {
-    await axios.put(urlBaseServer + `/posts/like/${id}`);
-    getPosts();
+    try {
+      if (id) {
+        await axios.put(`http://localhost:3000/posts/${id}/like`);
+        getPosts(); 
+      } else {
+        console.error("ID inválido para incrementar likes");
+      }
+    } catch (error) {
+      console.error("Error al incrementar likes:", error);
+    }
   };
+  
 
-  // este método se utilizará en el siguiente desafío
   const eliminarPost = async (id) => {
     await axios.delete(urlBaseServer + `/posts/${id}`);
     getPosts();
@@ -51,14 +65,10 @@ function App() {
           />
         </div>
         <div className="col-12 col-sm-8 px-5 row posts align-items-start">
-          {posts.map((post, i) => (
-            <Post
-              key={i}
-              post={post}
-              like={like}
-              eliminarPost={eliminarPost}
-            />
-          ))}
+        {posts.map((post) => (
+    <Post key={post.id} post={post} like={like} eliminarPost={eliminarPost} />
+))}
+
         </div>
       </div>
     </div>
